@@ -1,0 +1,83 @@
+# =========================
+# Go build artifacts
+# =========================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Binaries
+*.test
+*.out
+*.prof
+bin/
+build/
+dist/
+
+# =========================
+# Go workspace & modules
+# =========================
+# Vendor directory (ignore if you don't commit vendor/)
+vendor/
+
+# Go workspaces
+go.work
+go.work.sum
+
+# =========================
+# Environment & secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs & runtime files
+# =========================
+*.log
+logs/
+tmp/
+*.pid
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDEs & Editors
+# =========================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# IntelliJ / GoLand
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+
+# =========================
+# Testing & coverage
+# =========================
+coverage.out
+coverage/
+*.cover
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Misc
+# =========================
+*.local
+*.backup
+*.bak

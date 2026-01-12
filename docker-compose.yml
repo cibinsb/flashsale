@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  # --- PostgreSQL Database ---
+  postgres-db:
+    image: postgres:14-alpine
+    container_name: flash-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orders_db
+    volumes:
+      # Mount the SQL file to run it upon startup for seeding
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Redis Cache ---
+  redis-cache:
+    image: redis:6-alpine
+    container_name: flash-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
