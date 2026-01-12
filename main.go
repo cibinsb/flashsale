@@ -67,7 +67,7 @@ func checkEnvVars() {
 }
 func initClients() {
 	// 1. Initialize Redis Client
-	opt, _ := redis.ParseURL(os.Getenv("REDIS_URL"))
+	opt, _ := redis.ParseURL(RedisAddr)
 
 	Rdb := redis.NewClient(opt)
 
