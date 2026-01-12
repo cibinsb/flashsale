@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -15,9 +16,21 @@ import (
 )
 
 // --- Configuration ---
+var (
+	redis_password = os.Getenv("REDIS_PASSWORD")
+	redis_host     = os.Getenv("REDIS_HOST")
+	redis_port     = os.Getenv("REDIS_PORT")
+	RedisAddr      = "rediss://default:@" + redis_password + "@" + redis_host + ":" + redis_port
+	postgres_host  = os.Getenv("POSTGRES_HOST")
+	postgres_port  = os.Getenv("POSTGRES_PORT")
+	postgres_user  = os.Getenv("POSTGRES_USER")
+	postgres_pass  = os.Getenv("POSTGRES_PASSWORD")
+	postgres_db    = os.Getenv("POSTGRES_DB")
+
+	PostgresDSN = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", postgres_host, postgres_port, postgres_user, postgres_pass, postgres_db)
+)
+
 const (
-	RedisAddr     = "localhost:6379" // Docker service name
-	PostgresDSN   = "host=localhost user=user password=password dbname=orders_db port=5432 sslmode=disable TimeZone=UTC"
 	RedisCacheTTL = 5 * time.Minute // Time-To-Live for hot data
 	Port          = ":8080"
 )
@@ -42,12 +55,24 @@ var (
 	DB  *gorm.DB
 )
 
+func checkEnvVars() {
+	requiredVars := []string{"REDIS_PASSWORD", "REDIS_HOST", "REDIS_PORT", "POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB"}
+	for _, v := range requiredVars {
+		if os.Getenv(v) == "" {
+			log.Fatalf("Environment variable %s is not set", v)
+		}
+	}
+}
 func initClients() {
 	// 1. Initialize Redis Client
-	Rdb = redis.NewClient(&redis.Options{
-		Addr:     RedisAddr,
-		PoolSize: 100, // Large pool size for 100K QPS I/O concurrency
-	})
+	opt, _ := redis.ParseURL(os.Getenv("REDIS_URL"))
+
+	Rdb := redis.NewClient(opt)
+
+	// Rdb = redis.NewClient(&redis.Options{
+	// 	Addr:     RedisAddr,
+	// 	PoolSize: 100, // Large pool size for 100K QPS I/O concurrency
+	// })
 
 	// Check Redis connection
 	_, err := Rdb.Ping(ctx).Result()
@@ -159,6 +184,9 @@ func GetOrderHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 // --- Main Function ---
 
 func main() {
+	// Check required environment variables
+	checkEnvVars()
+
 	// Initialize connections and pools
 	initClients()
 
