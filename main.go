@@ -56,12 +56,14 @@ var (
 )
 
 func checkEnvVars() {
-	requiredVars := []string{"REDIS_PASSWORD", "REDIS_HOST", "REDIS_PORT", "POSTGRES_HOST", "POSTGRES_PORT", "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB"}
+	requiredVars := []string{"REDIS_PASSWORD", "REDIS_HOST", "REDIS_PORT", "POSTGRES_HOST",
+		"POSTGRES_PORT", "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB"}
 	for _, v := range requiredVars {
 		if os.Getenv(v) == "" {
 			log.Fatalf("Environment variable %s is not set", v)
 		}
 	}
+	log.Println("✅ All required environment variables are set.")
 }
 func initClients() {
 	// 1. Initialize Redis Client
