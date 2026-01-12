@@ -20,7 +20,7 @@ var (
 	redis_password = os.Getenv("REDIS_PASSWORD")
 	redis_host     = os.Getenv("REDIS_HOST")
 	redis_port     = os.Getenv("REDIS_PORT")
-	RedisAddr      = "rediss://default:@" + redis_password + "@" + redis_host + ":" + redis_port
+	RedisAddr      = fmt.Sprintf("redis://default:%s@%s:%s", redis_password, redis_host, redis_port)
 	postgres_host  = os.Getenv("POSTGRES_HOST")
 	postgres_port  = os.Getenv("POSTGRES_PORT")
 	postgres_user  = os.Getenv("POSTGRES_USER")
