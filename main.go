@@ -71,7 +71,7 @@ func initClients() {
 
 	//opt.PoolSize = 100 // Large pool size for 100K QPS I/O concurrency
 
-	Rdb := redis.NewClient(opt)
+	Rdb = redis.NewClient(opt)
 
 	// Rdb = redis.NewClient(&redis.Options{
 	// 	Addr:     RedisAddr,
