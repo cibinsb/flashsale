@@ -67,14 +67,16 @@ func checkEnvVars() {
 }
 func initClients() {
 	// 1. Initialize Redis Client
-	// opt, _ := redis.ParseURL(RedisAddr)
+	opt, _ := redis.ParseURL(RedisAddr)
 
-	// Rdb := redis.NewClient(opt)
+	opt.PoolSize = 100 // Large pool size for 100K QPS I/O concurrency
 
-	Rdb = redis.NewClient(&redis.Options{
-		Addr:     RedisAddr,
-		PoolSize: 100, // Large pool size for 100K QPS I/O concurrency
-	})
+	Rdb := redis.NewClient(opt)
+
+	// Rdb = redis.NewClient(&redis.Options{
+	// 	Addr:     RedisAddr,
+	// 	PoolSize: 100, // Large pool size for 100K QPS I/O concurrency
+	// })
 
 	// Check Redis connection
 	_, err := Rdb.Ping(ctx).Result()
